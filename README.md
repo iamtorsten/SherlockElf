@@ -34,7 +34,8 @@ To get started with SherlockElf, follow these steps:
 
 3. **Setup Environment**:
 - Magisk or [KernelSU](https://github.com/tiann/KernelSU) rooted Android Phone or Tablet
-- Running Frida Server on Phone
+- Jailbroken iOS Device (experimental)
+- Running Frida Server on Phone or Tablet
 - Installed Frida Tools on PC
 
 ## Usage 🚀
