@@ -1,4 +1,4 @@
-var active = false;
+var active = true;
 
 // Stalker
 function stalk(pattern)
