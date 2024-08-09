@@ -12,7 +12,7 @@
 ## Features ✨
 
 - **Static Analysis**: Extracts and analyzes metadata, headers, and sections from ELF binaries.
-- **Dynamic Analysis**: Executes and monitors ELF and ***Mach-O*** (experimental) binaries to observe runtime behavior and identify potential vulnerabilities.
+- **Dynamic Analysis**: Executes and monitors ELF and Mach-O (experimental) binaries to observe runtime behavior and identify potential vulnerabilities.
 - **User-friendly Interface**: Intuitive command-line interface for easy interaction.
 - **Comprehensive Reports**: Generates detailed analysis reports for further inspection.
 - **Cross-platform Support**: Works seamlessly on multiple platforms including Windows, macOS, and Linux.
