@@ -3,7 +3,7 @@
   <img src="assets/Font.png" alt="SherlockElf" width="233" height="60"/>
 </p>
 
-**SherlockElf** is a powerful tool designed for both static and dynamic analysis of Android ELF binaries and dynamic iOS Macho-O binaries (experimental). It helps security researchers, developers, and reverse engineers gain insights into ELF (Executable and Linkable Format) binaries used in Android applications and Mach-O (Mach Object) binaries used in iOS applications.
+**SherlockElf** is a powerful tool designed for both static and dynamic analysis of Android ELF binaries and dynamic analysis of iOS Macho-O binaries (experimental). It helps security researchers, developers, and reverse engineers gain insights into ELF (Executable and Linkable Format) binaries used in Android applications and Mach-O (Mach Object) binaries used in iOS applications.
 <br>
 <p align="center">
   <img src="assets/Emu.gif" alt="Emu"/>
@@ -12,7 +12,7 @@
 ## Features ✨
 
 - **Static Analysis**: Extracts and analyzes metadata, headers, and sections from ELF binaries.
-- **Dynamic Analysis**: Executes and monitors ELF and ***Mach-O*** (experimental) binaries to observe runtime behavior and identify potential vulnerabilities.
+- **Dynamic Analysis**: Executes and monitors ELF and Mach-O (experimental) binaries to observe runtime behavior and identify potential vulnerabilities.
 - **User-friendly Interface**: Intuitive command-line interface for easy interaction.
 - **Comprehensive Reports**: Generates detailed analysis reports for further inspection.
 - **Cross-platform Support**: Works seamlessly on multiple platforms including Windows, macOS, and Linux.
