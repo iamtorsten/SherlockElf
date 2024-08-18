@@ -15,8 +15,8 @@ jobs:
 
     - name: Set up keychain and import certificate
       run: |
-        # Decode the base64 certificate and save it as developer_certificate.p12
-        echo "${{ secrets.BASE64_CERTIFICATE }}" | base64 --decode > developer_certificate.p12
+        # Decode the base64 certificate stored in CERTIFICATE_P12 and save it as developer_certificate.p12
+        echo "${{ secrets.CERTIFICATE_P12 }}" | base64 --decode > developer_certificate.p12
 
         # Check if the certificate file is valid
         if [ -s developer_certificate.p12 ]; then
