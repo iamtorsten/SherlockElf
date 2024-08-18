@@ -1,4 +1,4 @@
-name: SherlockElf iOS
+name: SherlockElf
 
 on:
   schedule:
@@ -58,7 +58,7 @@ jobs:
         mkdir -p build-ios-arm64
         cd build-ios-arm64
         ../frida/configure --host=ios-arm64
-        ninja -C build-ios-arm64 subprojects/frida-core/server/frida-server || { echo "Build failed for ios-arm64"; ls -alh; exit 1; }
+        ninja || { echo "Build failed for ios-arm64"; ls -alh; exit 1; }
 
     - name: Package frida-server for iOS
       shell: bash
