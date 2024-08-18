@@ -1,0 +1,144 @@
+name: SherlockElf
+
+on:
+  schedule:
+    - cron: "0 9/12 * * *"
+  workflow_dispatch:
+  push:
+    branches: ["main", "ci"]
+    paths:
+      - ".github/workflows/build.yml"
+      - "patches/**"
+permissions:
+  contents: write
+
+jobs:
+  ios_build:
+    runs-on: macos-latest
+    needs: [check_version, create_release]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    - name: Install Dependencies
+      run: |
+        brew update
+        brew install ninja meson python@3.12
+        brew install openssl@1.1
+        brew link openssl@1.1 --force
+        # Überprüfen, ob das Zertifikat vorhanden ist
+        if [ ! -f "$(brew --prefix openssl@1.1)/etc/openssl@1.1/cert.pem" ]; then
+          echo "Zertifikatsdatei fehlt, versuche Zertifikate zu aktualisieren."
+          /opt/homebrew/opt/openssl@1.1/bin/c_rehash
+        fi
+        # Zertifikate zur Systemvertrauensstellung hinzufügen
+        sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $(brew --prefix openssl@1.1)/etc/openssl@1.1/cert.pem || true
+
+    - name: Clone Frida repository with submodules
+      run: |
+        git clone --recurse-submodules https://github.com/frida/frida
+        cd frida
+        git submodule update --init --recursive
+
+    - name: Apply patches to frida-core
+      shell: bash
+      run: |
+        if [ -d "frida/subprojects/frida-core" ]; then
+          cd frida/subprojects/frida-core
+          for patch in ${{ github.workspace }}/patches/frida-core/*.patch; do
+            git am "$patch"
+          done
+        else
+          echo "Directory frida/subprojects/frida-core does not exist"
+          exit 1
+        fi
+
+    - name: Build Frida for iOS
+      shell: bash
+      run: |
+        ARCHES="ios-arm64 ios-x86_64"
+        for ARCH in $ARCHES
+        do
+          mkdir build-$ARCH
+          cd build-$ARCH
+          ../frida/configure --host=$ARCH
+          make || { echo "Build failed for $ARCH"; exit 1; }
+          cd ..
+        done
+
+    - name: Package build result for iOS
+      shell: bash
+      run: |
+        gzip build-ios-arm64/subprojects/frida-core/server/frida-server
+        gzip build-ios-x86_64/subprojects/frida-core/server/frida-server
+
+        gzip build-ios-arm64/subprojects/frida-core/inject/frida-inject
+        gzip build-ios-x86_64/subprojects/frida-core/inject/frida-inject
+
+        gzip build-ios-arm64/subprojects/frida-core/lib/gadget/frida-gadget.dylib
+        gzip build-ios-x86_64/subprojects/frida-core/lib/gadget/frida-gadget.dylib
+
+    - name: Upload iOS arm64 frida-server for SherlockElf
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/build-ios-arm64/subprojects/frida-core/server/frida-server.gz
+        asset_name: SherlockElf-server-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-arm64.gz
+        asset_content_type: application/octet-stream
+
+    - name: Upload iOS x86_64 frida-server for SherlockElf
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/build-ios-x86_64/subprojects/frida-core/server/frida-server.gz
+        asset_name: SherlockElf-server-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-x86_64.gz
+        asset_content_type: application/octet-stream
+        
+    - name: Upload iOS arm64 frida-inject for SherlockElf
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/build-ios-arm64/subprojects/frida-core/inject/frida-inject.gz
+        asset_name: SherlockElf-inject-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-arm64.gz
+        asset_content_type: application/octet-stream
+        
+    - name: Upload iOS x86_64 frida-inject for SherlockElf
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/build-ios-x86_64/subprojects/frida-core/inject/frida-inject.gz
+        asset_name: SherlockElf-inject-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-x86_64.gz
+        asset_content_type: application/octet-stream
+        
+    - name: Upload iOS arm64 frida-gadget for SherlockElf
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/build-ios-arm64/subprojects/frida-core/lib/gadget/frida-gadget.dylib.gz
+        asset_name: SherlockElf-gadget-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-arm64.dylib.gz
+        asset_content_type: application/octet-stream
+
+    - name: Upload iOS x86_64 frida-gadget for SherlockElf
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
+        asset_path: ${{ github.workspace }}/build-ios-x86_64/subprojects/frida-core/lib/gadget/frida-gadget.dylib.gz
+        asset_name: SherlockElf-gadget-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-x86_64.dylib.gz
+        asset_content_type: application/octet-stream
