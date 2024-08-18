@@ -61,7 +61,7 @@ jobs:
           mkdir build-$ARCH
           cd build-$ARCH
           ../frida/configure --host=$ARCH
-          make || { echo "Build failed for $ARCH"; tail -n 100 build.ninja.log; exit 1; }
+          make V=1 || { echo "Build failed for $ARCH"; ls -alh; find . -type f -name "*.log" -exec cat {} \; ; exit 1; }
           cd ..
         done
 
