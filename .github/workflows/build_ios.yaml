@@ -1,4 +1,4 @@
-name: SherlockElf iOS
+name: SherlockElf
 
 on:
   schedule:
@@ -29,7 +29,8 @@ jobs:
         brew update
         brew install ninja meson python@3.12
         brew install openssl@1.1
-        brew link openssl@1.1 --force
+        brew unlink openssl@3 || true  # Unlink OpenSSL 3, falls installiert
+        brew link openssl@1.1 --overwrite  # Verlinke OpenSSL 1.1 und überschreibe alle Konflikte
         # Überprüfen, ob das Zertifikat vorhanden ist
         if [ ! -f "$(brew --prefix openssl@1.1)/etc/openssl@1.1/cert.pem" ]; then
           echo "Zertifikatsdatei fehlt, versuche Zertifikate zu aktualisieren."
