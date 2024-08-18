@@ -113,10 +113,11 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-    - name: Clone Frida repository with submodules
-      run: |
-        git clone --recurse-submodules https://github.com/frida/frida
-        cd frida
+    - name: Setup Android NDK r25
+      id: setup-ndk
+      uses: nttld/setup-ndk@v1
+      with:
+        ndk-version: r25b  # Specify NDK r25b
 
     - name: Apply patches to frida-core
       shell: bash
@@ -131,16 +132,17 @@ jobs:
           exit 1
         fi
 
-    - name: build frida for Android
+    - name: Build frida for Android
       shell: bash
       run: |
         ARCHES="android-arm android-arm64 android-x86 android-x86_64"
+        export ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}
         for ARCH in $ARCHES
         do
           mkdir build-$ARCH
           cd build-$ARCH
           ../frida/configure --host=$ARCH
-          make
+          make || { echo "Build failed for $ARCH"; exit 1; }
           cd ..
         done
     
@@ -326,6 +328,14 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+    - name: Install Dependencies
+      run: |
+        brew update
+        brew install ninja
+        brew install meson
+        brew install python@3.12
+        sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /usr/local/etc/openssl@1.1/cert.pem
+
     - name: Clone Frida repository with submodules
       run: |
         git clone --recurse-submodules https://github.com/frida/frida
@@ -353,7 +363,7 @@ jobs:
           mkdir build-$ARCH
           cd build-$ARCH
           ../frida/configure --host=$ARCH
-          make
+          make || { echo "Build failed for $ARCH"; exit 1; }
           cd ..
         done
 
