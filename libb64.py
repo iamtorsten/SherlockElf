@@ -38,7 +38,7 @@ def main():
         print(f"[*] Hooking {target}. Press Ctrl+C to stop.")
         sys.stdin.read()
     except frida.ServerNotRunningError:
-        print("Frida server is not running. Please start the frida-server on your device.")
+        print("SherlockElf server is not running. Please start the SherlockElf Server on your device.")
     except frida.ProcessNotFoundError:
         print(f"Process '{target}' not found. Make sure the app is running.")
     except Exception as e:
