@@ -11,8 +11,6 @@ on:
       - "patches/**"
 permissions:
   contents: write
-  issues: write
-  pull-requests: write
 
 jobs: 
   check_version:
@@ -110,6 +108,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
     - uses: actions/setup-node@v3
       with:
         node-version: 18
@@ -139,29 +142,18 @@ jobs:
         sudo gem install fpm -v 1.11.0 --no-document
         python3 -m pip install lief graphlib
 
+    - name: Apply patches to frida-core
+      shell: bash
+      run: |
+        echo "Apply patches in ${{ github.workspace }}/patches/frida-core to frida/subprojects/frida-core"
+        cd frida/subprojects/frida-core
+        for patch in ${{ github.workspace }}/patches/frida-core/*.patch; do
+          git am "$patch"
+        done
+
     - name: build frida for Android
       shell: bash
       run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        
-        export ANDROID_NDK_ROOT=${{ steps.setup-ndk.outputs.ndk-path }}
-        echo "ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT"
-        
-        git clone --recurse-submodules https://github.com/frida/frida
-        cd frida
-        for path in ../patches/*
-        do
-          name=$(basename $path)
-          real=$(realpath $path)
-          echo "Apply patches in $real to frida/subprojects/$name"
-          cd subprojects/$name
-          git am ../../../patches/$name/*.patch
-          cd ../..
-          echo $i
-        done
-        cd ..
-        
         ARCHES="android-arm android-arm64 android-x86 android-x86_64"
         for ARCH in $ARCHES
         do
@@ -221,7 +213,6 @@ jobs:
         gzip build-android-arm64/subprojects/frida-core/lib/gadget/frida-gadget.so
         gzip build-android-x86/subprojects/frida-core/lib/gadget/frida-gadget.so
         gzip build-android-x86_64/subprojects/frida-core/lib/gadget/frida-gadget.so
-        
 
     - name: Upload android arm frida-server for SherlockElf
       uses: actions/upload-release-asset@v1.0.2
@@ -300,7 +291,7 @@ jobs:
       with:
         upload_url: '${{ steps.checkReleaseVersion.outputs.upload_url }}'
         asset_path: '${{ github.workspace }}/build-android-x86_64/subprojects/frida-core/inject/frida-inject.gz'
-        asset_name: 'SherlockElf-inject-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-arm-x86_64.gz'
+        asset_name: 'SherlockElf-inject-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-x86_64.gz'
         asset_content_type: application/octet-stream
     
     - name: Upload android arm frida-gadget for SherlockElf
@@ -350,6 +341,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
@@ -366,26 +362,18 @@ jobs:
         sudo gem install fpm -v 1.11.0 --no-document
         python3 -m pip install lief graphlib
 
+    - name: Apply patches to frida-core
+      shell: bash
+      run: |
+        echo "Apply patches in ${{ github.workspace }}/patches/frida-core to frida/subprojects/frida-core"
+        cd frida/subprojects/frida-core
+        for patch in ${{ github.workspace }}/patches/frida-core/*.patch; do
+          git am "$patch"
+        done
+
     - name: Build Frida for iOS
       shell: bash
       run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        
-        git clone --recurse-submodules https://github.com/frida/frida
-        cd frida
-        for path in ../patches/*
-        do
-          name=$(basename $path)
-          real=$(realpath $path)
-          echo "Apply patches in $real to frida/subprojects/$name"
-          cd subprojects/$name
-          git am ../../../patches/$name/*.patch
-          cd ../..
-          echo $i
-        done
-        cd ..
-        
         ARCHES="ios-arm64 ios-x86_64"
         for ARCH in $ARCHES
         do
