@@ -37,8 +37,6 @@ jobs:
         echo "${{ secrets.CERTIFICATE_P12 }}" | base64 --decode > certificate.p12
         security unlock-keychain -p "${{ secrets.CERTIFICATE_PASSWORD }}" ~/Library/Keychains/login.keychain-db
         security import certificate.p12 -k ~/Library/Keychains/login.keychain-db -P "${{ secrets.CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
-        security unlock-keychain -p "${{ secrets.CERTIFICATE_PASSWORD }}" ~/Library/Keychains/login.keychain-db
-        security set-key-partition-list -S apple-tool:,apple: -s -k "${{ secrets.CERTIFICATE_PASSWORD }}" ~/Library/Keychains/login.keychain-db
         rm certificate.p12
       env:
         CERTIFICATE_PASSWORD: ${{ secrets.CERTIFICATE_PASSWORD }}
