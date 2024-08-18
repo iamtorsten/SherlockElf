@@ -5,10 +5,14 @@ on:
     - cron: "0 9/12 * * *"
   workflow_dispatch:
   push:
+    tags:
+      - 'deploy_server'
     branches: ["main", "ci"]
     paths:
       - ".github/workflows/build.yml"
       - "patches/**"
+permissions:
+  contents: write
 
 jobs: 
   check_version:
