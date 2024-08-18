@@ -14,7 +14,9 @@ def on_message(message, data):
         print(f"[Error]: {message['stack']}")
 
 def main():
-    device, session = Inject(target=target).attach()
+    # Setup Device, Session and Source
+    sherlock = Inject(target=target)
+    device, session = sherlock.attach()
 
     # Load the JNI methods from the file
     with open('jni/libart_jni.txt', 'r') as f:
@@ -63,7 +65,7 @@ def main():
     });
     """ % (jni_methods)
 
-    script = session.create_script(script_code)
+    script = sherlock.source(session, script_code)
     script.on('message', on_message)
     script.load()
 

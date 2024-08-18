@@ -6,8 +6,10 @@ with open("hook/stalker.js") as f:
     js_code = f.read()
 
 def main():
-    device, session = Inject(target=target).attach()
-    script = session.create_script(js_code)
+    # Setup Device, Session and Source
+    sherlock = Inject(target=target)
+    device, session = sherlock.attach()
+    script = sherlock.source(session, js_code)
     script.load()
 
     # ... do more stuff

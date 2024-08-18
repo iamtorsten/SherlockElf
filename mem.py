@@ -36,9 +36,11 @@ def main():
         with open("hook/mem.js") as f:
             script_code = f.read()
 
-        # Attach to the target process
-        device, session = Inject(target=target).attach()
-        script = session.create_script(script_code)
+        # Setup Device, Session and Source
+        sherlock = Inject(target=target)
+        device, session = sherlock.attach()
+        script = sherlock.source(session, script_code)
+
         script.on('message', on_message)
         script.load()
 

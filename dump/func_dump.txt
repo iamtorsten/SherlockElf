@@ -1,0 +1,144 @@
+Function at 0x7a5be4d944 called.
+x0 (arg1): 0x7dc7dc09f0
+x0 as int: -941880848
+x0 is not a readable string.
+x1 (arg2): 0x5bb6bb90
+x1 as int: 1538702224
+x1 as string: h<[	
+x2 (arg3): 0x7af6518e58
+x2 as int: -162427304
+x2 is not a readable string.
+x3 (arg4): 0x7d87e26e68
+x3 as int: -2015203736
+x3 is not a readable string.
+x4 (arg5): 0x7af6518e64
+x4 as int: -162427292
+x4 is not a readable string.
+x5 (arg6): 0xfffffffffffffffe
+x5 as int: -2
+x5 is not a readable string.
+x6 (arg7): 0x7ff80000000000b0
+x6 as int: 176
+x6 is not a readable string.
+x7 (arg8): 0x70ac5ffc
+x7 as int: 1890344956
+x7 is not a readable string.
+x8 (arg9): 0x35ad539958c61da2
+x8 as int: 1489378722
+x8 is not a readable string.
+x9 (arg10): 0x35ad539958c61da2
+x9 as int: 1489378722
+x9 is not a readable string.
+
+Function at 0x7a5be4d944 returned: 0x47
+Return value as int: 71
+Return value is not a readable string.
+
+Function at 0x7a5be4d944 called.
+x0 (arg1): 0x7dc7dc09f0
+x0 as int: -941880848
+x0 is not a readable string.
+x1 (arg2): 0x5bb6bb90
+x1 as int: 1538702224
+x1 as string: h<[	
+x2 (arg3): 0x7af6518038
+x2 as int: -162430920
+x2 is not a readable string.
+x3 (arg4): 0x7d87e26e68
+x3 as int: -2015203736
+x3 is not a readable string.
+x4 (arg5): 0x7af6518044
+x4 as int: -162430908
+x4 is not a readable string.
+x5 (arg6): 0x0
+x5 as int: 0
+x5 as string: null
+x6 (arg7): 0x7b3a46bc97
+x6 as int: 977714327
+x6 as string: ZLJ
+x7 (arg8): 0x3
+x7 as int: 3
+x7 is not a readable string.
+x8 (arg9): 0x35ad539958c61da2
+x8 as int: 1489378722
+x8 is not a readable string.
+x9 (arg10): 0x35ad539958c61da2
+x9 as int: 1489378722
+x9 is not a readable string.
+
+Function at 0x7a5be4d944 returned: 0x46
+Return value as int: 70
+Return value is not a readable string.
+
+Function at 0x7a5be4d944 called.
+x0 (arg1): 0x7dc7dc0e70
+x0 as int: -941879696
+x0 is not a readable string.
+x1 (arg2): 0x5bb6bb90
+x1 as int: 1538702224
+x1 as string: h<[	
+x2 (arg3): 0x7b030befb8
+x2 as int: 51113912
+x2 is not a readable string.
+x3 (arg4): 0x7d87e26e68
+x3 as int: -2015203736
+x3 is not a readable string.
+x4 (arg5): 0x7b030befc4
+x4 as int: 51113924
+x4 is not a readable string.
+x5 (arg6): 0x7c549d7e74
+x5 as int: 1419607668
+x5 is not a readable string.
+x6 (arg7): 0xebad6a89
+x6 as int: -340956535
+x6 is not a readable string.
+x7 (arg8): 0x35ad539958c61da2
+x7 as int: 1489378722
+x7 is not a readable string.
+x8 (arg9): 0x35ad539958c61da2
+x8 as int: 1489378722
+x8 is not a readable string.
+x9 (arg10): 0x35ad539958c61da2
+x9 as int: 1489378722
+x9 is not a readable string.
+
+Function at 0x7a5be4d944 returned: 0x47
+Return value as int: 71
+Return value is not a readable string.
+
+Function at 0x7a5be4d944 called.
+x0 (arg1): 0x7dc7dc0e70
+x0 as int: -941879696
+x0 is not a readable string.
+x1 (arg2): 0x5bb6bb90
+x1 as int: 1538702224
+x1 as string: h<[	
+x2 (arg3): 0x7b030be198
+x2 as int: 51110296
+x2 is not a readable string.
+x3 (arg4): 0x7d87e26e68
+x3 as int: -2015203736
+x3 is not a readable string.
+x4 (arg5): 0x7b030be1a4
+x4 as int: 51110308
+x4 is not a readable string.
+x5 (arg6): 0x0
+x5 as int: 0
+x5 as string: null
+x6 (arg7): 0x7b3a46bc97
+x6 as int: 977714327
+x6 as string: ZLJ
+x7 (arg8): 0x3
+x7 as int: 3
+x7 is not a readable string.
+x8 (arg9): 0x35ad539958c61da2
+x8 as int: 1489378722
+x8 is not a readable string.
+x9 (arg10): 0x35ad539958c61da2
+x9 as int: 1489378722
+x9 is not a readable string.
+
+Function at 0x7a5be4d944 returned: 0x47
+Return value as int: 71
+Return value is not a readable string.
+

@@ -24,8 +24,11 @@ module_name = "libdelta.so"
 with open("hook/func.js", "r") as f:
     script_code = f.read()
 
-device, session = Inject(target=target).attach()
-script = session.create_script(script_code)
+# Setup Device, Session and Source
+sherlock = Inject(target=target)
+device, session = sherlock.attach()
+script = sherlock.source(session, script_code)
+
 script.on('message', on_message)
 script.load()
 script.exports.hookfunction(function_offset, module_name)
