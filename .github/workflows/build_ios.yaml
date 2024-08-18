@@ -32,6 +32,12 @@ jobs:
         brew link openssl@1.1 --overwrite  # Verlinke OpenSSL 1.1 und überschreibe alle Konflikte
         sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $(brew --prefix openssl@1.1)/etc/openssl@1.1/cert.pem || true
 
+    - name: Import the certificate and private key
+      run: |
+        echo "${{ secrets.CERTIFICATE_P12 }}" | base64 --decode > certificate.p12
+        security import certificate.p12 -k ~/Library/Keychains/login.keychain -P "${{ secrets.CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
+        security set-key-partition-list -S apple-tool:,apple: -s -k "${{ secrets.CERTIFICATE_PASSWORD }}" ~/Library/Keychains/login.keychain
+
     - name: Clone Frida repository with submodules
       run: |
         git clone --recurse-submodules https://github.com/frida/frida
