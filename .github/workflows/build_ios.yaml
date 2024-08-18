@@ -1,4 +1,4 @@
-name: SherlockElf
+name: SherlockElf iOS
 
 on:
   schedule:
@@ -15,7 +15,6 @@ permissions:
 jobs:
   ios_build:
     runs-on: macos-latest
-    needs: [check_version, create_release]
 
     steps:
     - uses: actions/checkout@v3
