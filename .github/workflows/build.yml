@@ -119,16 +119,21 @@ jobs:
       with:
         ndk-version: r25b  # Specify NDK r25b
 
+    - name: Clone Frida repository with submodules
+      run: |
+        git clone --recurse-submodules https://github.com/frida/frida
+        cd frida
+
     - name: Apply patches to frida-core
       shell: bash
       run: |
-        if [ -d "frida/subprojects/frida-core" ]; then
-          cd frida/subprojects/frida-core
+        if [ -d "subprojects/frida-core" ]; then
+          cd subprojects/frida-core
           for patch in ${{ github.workspace }}/patches/frida-core/*.patch; do
             git am "$patch"
           done
         else
-          echo "Directory frida/subprojects/frida-core does not exist"
+          echo "Directory subprojects/frida-core does not exist"
           exit 1
         fi
 
@@ -334,7 +339,7 @@ jobs:
         brew install ninja
         brew install meson
         brew install python@3.12
-        sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain /usr/local/etc/openssl@1.1/cert.pem
+        sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $(brew --prefix openssl)/etc/openssl@1.1/cert.pem
 
     - name: Clone Frida repository with submodules
       run: |
@@ -344,13 +349,13 @@ jobs:
     - name: Apply patches to frida-core
       shell: bash
       run: |
-        if [ -d "frida/subprojects/frida-core" ]; then
-          cd frida/subprojects/frida-core
+        if [ -d "subprojects/frida-core" ]; then
+          cd subprojects/frida-core
           for patch in ${{ github.workspace }}/patches/frida-core/*.patch; do
             git am "$patch"
           done
         else
-          echo "Directory frida/subprojects/frida-core does not exist"
+          echo "Directory subprojects/frida-core does not exist"
           exit 1
         fi
 
