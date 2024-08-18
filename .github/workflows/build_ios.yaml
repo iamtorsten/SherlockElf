@@ -1,4 +1,4 @@
-name: SherlockElf
+name: SherlockElf iOS
 
 on:
   schedule:
@@ -52,30 +52,18 @@ jobs:
           exit 1
         fi
 
-    - name: Build Frida for iOS
+    - name: Build Frida server for iOS
       shell: bash
       run: |
-        ARCHES="ios-arm64 ios-x86_64"
-        for ARCH in $ARCHES
-        do
-          mkdir build-$ARCH
-          cd build-$ARCH
-          ../frida/configure --host=$ARCH
-          make V=1 || { echo "Build failed for $ARCH"; ls -alh; find . -type f -name "*.log" -exec cat {} \; ; exit 1; }
-          cd ..
-        done
+        mkdir -p build-ios-arm64
+        cd build-ios-arm64
+        ../frida/configure --host=ios-arm64
+        ninja -C build-ios-arm64 subprojects/frida-core/server/frida-server || { echo "Build failed for ios-arm64"; ls -alh; exit 1; }
 
-    - name: Package build result for iOS
+    - name: Package frida-server for iOS
       shell: bash
       run: |
         gzip build-ios-arm64/subprojects/frida-core/server/frida-server
-        gzip build-ios-x86_64/subprojects/frida-core/server/frida-server
-
-        gzip build-ios-arm64/subprojects/frida-core/inject/frida-inject
-        gzip build-ios-x86_64/subprojects/frida-core/inject/frida-inject
-
-        gzip build-ios-arm64/subprojects/frida-core/lib/gadget/frida-gadget.dylib
-        gzip build-ios-x86_64/subprojects/frida-core/lib/gadget/frida-gadget.dylib
 
     - name: Upload iOS arm64 frida-server for SherlockElf
       uses: actions/upload-release-asset@v1.0.2
@@ -85,54 +73,4 @@ jobs:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
         asset_path: ${{ github.workspace }}/build-ios-arm64/subprojects/frida-core/server/frida-server.gz
         asset_name: SherlockElf-server-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-arm64.gz
-        asset_content_type: application/octet-stream
-
-    - name: Upload iOS x86_64 frida-server for SherlockElf
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-ios-x86_64/subprojects/frida-core/server/frida-server.gz
-        asset_name: SherlockElf-server-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-x86_64.gz
-        asset_content_type: application/octet-stream
-        
-    - name: Upload iOS arm64 frida-inject for SherlockElf
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-ios-arm64/subprojects/frida-core/inject/frida-inject.gz
-        asset_name: SherlockElf-inject-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-arm64.gz
-        asset_content_type: application/octet-stream
-        
-    - name: Upload iOS x86_64 frida-inject for SherlockElf
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-ios-x86_64/subprojects/frida-core/inject/frida-inject.gz
-        asset_name: SherlockElf-inject-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-x86_64.gz
-        asset_content_type: application/octet-stream
-        
-    - name: Upload iOS arm64 frida-gadget for SherlockElf
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-ios-arm64/subprojects/frida-core/lib/gadget/frida-gadget.dylib.gz
-        asset_name: SherlockElf-gadget-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-arm64.dylib.gz
-        asset_content_type: application/octet-stream
-
-    - name: Upload iOS x86_64 frida-gadget for SherlockElf
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-ios-x86_64/subprojects/frida-core/lib/gadget/frida-gadget.dylib.gz
-        asset_name: SherlockElf-gadget-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-x86_64.dylib.gz
         asset_content_type: application/octet-stream
