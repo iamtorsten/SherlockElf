@@ -109,27 +109,22 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Configure Git
-      run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+	  run: |
+		git config --global user.name "GitHub Actions"
+		git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-    - name: Clone Frida repository with submodules
-      run: |
-        git clone --recurse-submodules https://github.com/frida/frida
-        cd frida
-
-    - name: Apply patches to frida-core
-      shell: bash
-      run: |
-        if [ -d "frida/subprojects/frida-core" ]; then
-          cd frida/subprojects/frida-core
-          for patch in ${{ github.workspace }}/patches/frida-core/*.patch; do
-            git am "$patch"
-          done
-        else
-          echo "Directory frida/subprojects/frida-core does not exist"
-          exit 1
-        fi
+	- name: Apply patches to frida-core
+	  shell: bash
+	  run: |
+		if [ -d "frida/subprojects/frida-core" ]; then
+		  cd frida/subprojects/frida-core
+		  for patch in ${{ github.workspace }}/patches/frida-core/*.patch; do
+			git am "$patch"
+		  done
+		else
+		  echo "Directory frida/subprojects/frida-core does not exist"
+		  exit 1
+		fi
 
     - name: build frida for Android
       shell: bash
@@ -322,14 +317,22 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Configure Git
-      run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+	  run: |
+		git config --global user.name "GitHub Actions"
+		git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-    - name: Clone Frida repository with submodules
-      run: |
-        git clone --recurse-submodules https://github.com/frida/frida
-        cd frida
+	- name: Apply patches to frida-core
+	  shell: bash
+	  run: |
+		if [ -d "frida/subprojects/frida-core" ]; then
+		  cd frida/subprojects/frida-core
+		  for patch in ${{ github.workspace }}/patches/frida-core/*.patch; do
+			git am "$patch"
+		  done
+		else
+		  echo "Directory frida/subprojects/frida-core does not exist"
+		  exit 1
+		fi
 
     - name: Apply patches to frida-core
       shell: bash
