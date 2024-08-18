@@ -1,14 +1,10 @@
 name: SherlockElf
 
 on:
-  schedule:
-    - cron: "0 9/12 * * *"
   workflow_dispatch:
   push:
     branches: ["main", "ci"]
-    paths:
-      - ".github/workflows/build.yml"
-      - "patches/**"
+
 permissions:
   contents: write
 
@@ -23,6 +19,9 @@ jobs:
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+    - name: Set IOS_CERTID environment variable
+      run: echo "IOS_CERTID=${{ secrets.IOS_CERTID }}" >> $GITHUB_ENV
 
     - name: Install Dependencies
       run: |
