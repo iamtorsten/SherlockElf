@@ -15,45 +15,31 @@ jobs:
 
     - name: Set up keychain and import certificate
       run: |
-        # Decode the base64 certificate and save it as a .p12 file
-        echo "${{ secrets.BASE64_CERTIFICATE }}" | base64 --decode > certificate.p12
+        # Decode the base64 certificate and save it as developer_certificate.p12
+        echo "${{ secrets.BASE64_CERTIFICATE }}" | base64 --decode > developer_certificate.p12
+
+        # Check if the certificate file is valid
+        if [ -s developer_certificate.p12 ]; then
+          echo "Certificate file is valid."
+        else
+          echo "Certificate file is invalid or empty."
+          exit 1
+        fi
         
         # Unlock the keychain
         security unlock-keychain -p "$KEYCHAIN_PASSWORD" /Users/runner/Library/Keychains/login.keychain-db
         
-        # Import the .p12 certificate into the keychain
-        security import certificate.p12 -k ~/Library/Keychains/login.keychain-db -P "$P12_PASSWORD" -T /usr/bin/codesign
+        # Import the developer_certificate.p12 into the keychain
+        security import developer_certificate.p12 -k ~/Library/Keychains/login.keychain-db -P "$P12_PASSWORD" -T /usr/bin/codesign
         
-        # Set the keychain to not timeout
+        # Set keychain settings and access permissions
         security set-keychain-settings -t 3600 -l ~/Library/Keychains/login.keychain-db
-        
-        # Set key partition list to allow codesign to access the keychain
         security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" /Users/runner/Library/Keychains/login.keychain-db
         
         # Clean up the certificate file
-        rm certificate.p12
+        rm developer_certificate.p12
       env:
         KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
 
-    # Example step: Build your project
-    - name: Build Project
-      run: |
-        xcodebuild -workspace YourProject.xcworkspace -scheme YourScheme -sdk iphoneos -configuration Release clean build
-
-    # Example step: Sign your application (if needed)
-    - name: Sign Application
-      run: |
-        codesign --force --sign "Apple Development: Your Name (Team ID)" --entitlements Entitlements.plist "path/to/YourApp.app"
-
-    # Example step: Notarize your application (if needed)
-    - name: Notarize Application
-      run: |
-        xcrun altool --notarize-app -f "path/to/YourApp.app" --primary-bundle-id "com.yourcompany.yourapp" -u "$APPLE_ID" -p "@keychain:AppSpecificPassword"
-      env:
-        APPLE_ID: ${{ secrets.APPLE_ID }}
-
-    # Example step: Deploy your application (if needed)
-    - name: Deploy Application
-      run: |
-        # Your deployment steps here
+    # Continue with build, sign, and deploy steps...
