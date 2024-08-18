@@ -1,0 +1,21 @@
+
+---
+ gum/gum.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/gum/gum.c b/gum/gum.c
+index f6e6243f..3305f629 100644
+--- a/gum/gum.c
++++ b/gum/gum.c
+@@ -304,7 +304,7 @@ gum_init_embedded (void)
+   g_log_set_default_handler (gum_on_log_message, NULL);
+   gum_do_init ();
+ 
+-  g_set_prgname ("frida");
++  g_set_prgname ("ggbond");
+ 
+ #if defined (HAVE_LINUX) && defined (HAVE_GLIBC)
+   gum_libdl_prevent_unload ();
+-- 
+2.34.1
+
