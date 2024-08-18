@@ -123,6 +123,7 @@ jobs:
       run: |
         git clone --recurse-submodules https://github.com/frida/frida
         cd frida
+        git submodule update --init --recursive  # Ensure all submodules are initialized
 
     - name: Apply patches to frida-core
       shell: bash
@@ -339,12 +340,13 @@ jobs:
         brew install ninja
         brew install meson
         brew install python@3.12
-        sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $(brew --prefix openssl)/etc/openssl@1.1/cert.pem
+        sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $(brew --prefix openssl@1.1)/etc/openssl@1.1/cert.pem
 
     - name: Clone Frida repository with submodules
       run: |
         git clone --recurse-submodules https://github.com/frida/frida
         cd frida
+        git submodule update --init --recursive  # Ensure all submodules are initialized
 
     - name: Apply patches to frida-core
       shell: bash
