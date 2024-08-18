@@ -53,8 +53,9 @@ Using SherlockElf is straightforward. Below are some common commands and their d
     with open("hook/mem.js") as f:
         script_code = f.read()
 
-    device, session = Inject(target=target).attach()
-    script = session.create_script(script_code)
+    sherlock = Inject(target=target)
+    device, session = sherlock.attach()
+    script = sherlock.source(session, script_code)
     script.on('message', on_message)
     script.load()
     ```
