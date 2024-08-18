@@ -20,6 +20,9 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+    - name: Set IOS_CERTID environment variable
+      run: echo "IOS_CERTID=${{ secrets.IOS_CERTID }}" >> $GITHUB_ENV
+
     - name: Decode the base64 certificate and save it as developer_certificate.p12
       run: |
         echo "${{ secrets.CERTIFICATE_P12 }}" | base64 --decode > developer_certificate.p12
