@@ -7,7 +7,7 @@ on:
   push:
     branches: ["main", "ci"]
     paths:
-      - ".github/workflows/build.yml"
+      - ".github/workflows/build_android.yml"
       - "patches/**"
 permissions:
   contents: write
