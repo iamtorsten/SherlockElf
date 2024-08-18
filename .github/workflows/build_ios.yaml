@@ -1,4 +1,4 @@
-name: SherlockElf iOS
+name: SherlockElf iOS test
 
 on:
   workflow_dispatch:
