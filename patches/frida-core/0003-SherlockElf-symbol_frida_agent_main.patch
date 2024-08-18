@@ -1,3 +1,7 @@
+From 2df62177584129575842eff6a5ec1703c58f840d Sun Aug 18 11:53:00 2001
+From: iamtorsten <torsten.klinger@googlemail.com>
+Date: Sun, 18 Aug 2024 11:53:00 +0800
+Subject: [PATCH 3/9] SherlockElf: symbol_frida_agent_main
 
 ---
  src/agent-container.vala              |  2 +-

@@ -1,3 +1,7 @@
+From 2df62177584129575842eff6a5ec1703c58f840d Sun Aug 18 11:53:00 2001
+From: iamtorsten <torsten.klinger@googlemail.com>
+Date: Sun, 18 Aug 2024 11:53:00 +0800
+Subject: [PATCH 2/9] SherlockElf: frida_agent_so
 
 ---
  src/linux/linux-host-session.vala | 7 ++++---
