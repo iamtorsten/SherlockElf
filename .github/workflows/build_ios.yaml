@@ -60,6 +60,7 @@ jobs:
     - name: Build Frida Gadget and Frida Server for iOS
       shell: bash
       run: |
+        export PATH=$PATH:/Users/runner/work/SherlockElf/SherlockElf/frida/deps/toolchain-macos-arm64/bin
         mkdir -p build-ios-arm64
         cd build-ios-arm64
         ../frida/configure --host=ios-arm64
