@@ -31,12 +31,6 @@ jobs:
         brew install openssl@1.1
         brew unlink openssl@3 || true  # Unlink OpenSSL 3, falls installiert
         brew link openssl@1.1 --overwrite  # Verlinke OpenSSL 1.1 und überschreibe alle Konflikte
-        # Überprüfen, ob das Zertifikat vorhanden ist
-        if [ ! -f "$(brew --prefix openssl@1.1)/etc/openssl@1.1/cert.pem" ]; then
-          echo "Zertifikatsdatei fehlt, versuche Zertifikate zu aktualisieren."
-          /opt/homebrew/opt/openssl@1.1/bin/c_rehash
-        fi
-        # Zertifikate zur Systemvertrauensstellung hinzufügen
         sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $(brew --prefix openssl@1.1)/etc/openssl@1.1/cert.pem || true
 
     - name: Clone Frida repository with submodules
@@ -67,7 +61,7 @@ jobs:
           mkdir build-$ARCH
           cd build-$ARCH
           ../frida/configure --host=$ARCH
-          make || { echo "Build failed for $ARCH"; exit 1; }
+          make || { echo "Build failed for $ARCH"; tail -n 100 build.ninja.log; exit 1; }
           cd ..
         done
 
