@@ -68,6 +68,11 @@ jobs:
         ../frida/configure --host=ios-arm64
         ninja || { echo "Build failed for ios-arm64"; ls -alh; exit 1; }
 
+    - name: Code Sign Frida Helper
+      run: |
+        security unlock-keychain -p "${{ secrets.CERTIFICATE_PASSWORD }}" ~/Library/Keychains/login.keychain-db
+        /usr/bin/codesign -f -s "${{ secrets.IOS_CERTID }}" --keychain ~/Library/Keychains/login.keychain-db --entitlements ../../../../../../frida/subprojects/frida-core/src/darwin/frida-helper.xcent src/frida-helper.tmp
+
     - name: Package frida-server for iOS
       shell: bash
       run: |
