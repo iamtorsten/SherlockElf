@@ -23,16 +23,7 @@ jobs:
     - name: Set IOS_CERTID environment variable
       run: echo "IOS_CERTID=${{ secrets.IOS_CERTID }}" >> $GITHUB_ENV
 
-    - name: Install Dependencies
-      run: |
-        brew update
-        brew install ninja meson python@3.12
-        brew install openssl@1.1
-        brew unlink openssl@3 || true  # Unlink OpenSSL 3, falls installiert
-        brew link openssl@1.1 --overwrite  # Verlinke OpenSSL 1.1 und überschreibe alle Konflikte
-        sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $(brew --prefix openssl@1.1)/etc/openssl@1.1/cert.pem || true
-
-    - name: Import the certificate and private key
+    - name: Decode and import the certificate
       run: |
         echo "${{ secrets.CERTIFICATE_P12 }}" | base64 --decode > certificate.p12
         security import certificate.p12 -k ~/Library/Keychains/login.keychain -P "${{ secrets.CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
