@@ -11,6 +11,8 @@ on:
       - "patches/**"
 permissions:
   contents: write
+  issues: write
+  pull-requests: write
 
 jobs: 
   check_version:
