@@ -1,72 +1,59 @@
-name: SherlockElf
+name: Build and Sign
 
 on:
-  workflow_dispatch:
   push:
-    branches: ["main", "ci"]
-
-permissions:
-  contents: write
+    branches:
+      - main
 
 jobs:
-  ios_build:
+  build:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-    - name: Configure Git
+    - name: Set up keychain and import certificate
       run: |
-        git config --global user.name "GitHub Actions"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-    - name: Set IOS_CERTID environment variable
-      run: echo "IOS_CERTID=${{ secrets.IOS_CERTID }}" >> $GITHUB_ENV
-
-    - name: Decode and import the certificate
-      run: |
-        echo "${{ secrets.CERTIFICATE_P12 }}" | base64 --decode > certificate.p12
-        security import certificate.p12 -k ~/Library/Keychains/login.keychain -P "${{ secrets.CERTIFICATE_PASSWORD }}" -T /usr/bin/codesign
-        security set-key-partition-list -S apple-tool:,apple: -s -k "${{ secrets.CERTIFICATE_PASSWORD }}" ~/Library/Keychains/login.keychain
-
-    - name: Clone Frida repository with submodules
-      run: |
-        git clone --recurse-submodules https://github.com/frida/frida
-        cd frida
-        git submodule update --init --recursive
-
-    - name: Apply patches to frida-core
-      shell: bash
-      run: |
-        if [ -d "frida/subprojects/frida-core" ]; then
-          cd frida/subprojects/frida-core
-          for patch in ${{ github.workspace }}/patches/frida-core/*.patch; do
-            git am "$patch"
-          done
-        else
-          echo "Directory frida/subprojects/frida-core does not exist"
-          exit 1
-        fi
-
-    - name: Build Frida server for iOS
-      shell: bash
-      run: |
-        mkdir -p build-ios-arm64
-        cd build-ios-arm64
-        ../frida/configure --host=ios-arm64
-        ninja || { echo "Build failed for ios-arm64"; ls -alh; exit 1; }
-
-    - name: Package frida-server for iOS
-      shell: bash
-      run: |
-        gzip build-ios-arm64/subprojects/frida-core/server/frida-server
-
-    - name: Upload iOS arm64 frida-server for SherlockElf
-      uses: actions/upload-release-asset@v1.0.2
+        # Decode the base64 certificate and save it as a .p12 file
+        echo "${{ secrets.BASE64_CERTIFICATE }}" | base64 --decode > certificate.p12
+        
+        # Unlock the keychain
+        security unlock-keychain -p "$KEYCHAIN_PASSWORD" /Users/runner/Library/Keychains/login.keychain-db
+        
+        # Import the .p12 certificate into the keychain
+        security import certificate.p12 -k ~/Library/Keychains/login.keychain-db -P "$P12_PASSWORD" -T /usr/bin/codesign
+        
+        # Set the keychain to not timeout
+        security set-keychain-settings -t 3600 -l ~/Library/Keychains/login.keychain-db
+        
+        # Set key partition list to allow codesign to access the keychain
+        security set-key-partition-list -S apple-tool:,apple: -s -k "$KEYCHAIN_PASSWORD" /Users/runner/Library/Keychains/login.keychain-db
+        
+        # Clean up the certificate file
+        rm certificate.p12
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-ios-arm64/subprojects/frida-core/server/frida-server.gz
-        asset_name: SherlockElf-server-${{ needs.check_version.outputs.FRIDA_VERSION }}-ios-arm64.gz
-        asset_content_type: application/octet-stream
+        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+
+    # Example step: Build your project
+    - name: Build Project
+      run: |
+        xcodebuild -workspace YourProject.xcworkspace -scheme YourScheme -sdk iphoneos -configuration Release clean build
+
+    # Example step: Sign your application (if needed)
+    - name: Sign Application
+      run: |
+        codesign --force --sign "Apple Development: Your Name (Team ID)" --entitlements Entitlements.plist "path/to/YourApp.app"
+
+    # Example step: Notarize your application (if needed)
+    - name: Notarize Application
+      run: |
+        xcrun altool --notarize-app -f "path/to/YourApp.app" --primary-bundle-id "com.yourcompany.yourapp" -u "$APPLE_ID" -p "@keychain:AppSpecificPassword"
+      env:
+        APPLE_ID: ${{ secrets.APPLE_ID }}
+
+    # Example step: Deploy your application (if needed)
+    - name: Deploy Application
+      run: |
+        # Your deployment steps here
