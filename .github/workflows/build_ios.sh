@@ -64,8 +64,12 @@ ninja subprojects/frida-core/lib/gadget/frida-gadget.dylib subprojects/frida-cor
 }
 echo "Build step completed."
 
-# Ergebnisse verpacken und umbenennen
-gzip -c subprojects/frida-core/lib/gadget/frida-gadget.dylib > "SherlockElf-frida-gadget.dylib.gz"
-gzip -c subprojects/frida-core/server/frida-server > "SherlockElf-frida-server.gz"
+# Ergebnisse umbenennen
+mv subprojects/frida-core/lib/gadget/frida-gadget.dylib subprojects/frida-core/lib/gadget/SherlockElf-gadget.dylib
+mv subprojects/frida-core/server/frida-server subprojects/frida-core/server/SherlockElf-server
 
-echo "SherlockElf Gadget and Server have been built and packaged successfully."
+# Ergebnisse verpacken
+gzip -c subprojects/frida-core/lib/gadget/SherlockElf-gadget.dylib > "SherlockElf-gadget.dylib.gz"
+gzip -c subprojects/frida-core/server/SherlockElf-server > "SherlockElf-server.gz"
+
+echo "SherlockElf Gadget and Server have been built, renamed, and packaged successfully."
