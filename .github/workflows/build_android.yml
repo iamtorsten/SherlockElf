@@ -1,4 +1,4 @@
-name: SherlockElf Android
+name: Build
 
 on:
   schedule:
@@ -143,6 +143,9 @@ jobs:
           cd build-$ARCH
           ../frida/configure --host=$ARCH
           make || { echo "Build failed for $ARCH"; exit 1; }
+          mv subprojects/frida-core/server/frida-server subprojects/frida-core/server/SherlockElf-server
+          mv subprojects/frida-core/inject/frida-inject subprojects/frida-core/inject/SherlockElf-inject
+          mv subprojects/frida-core/lib/gadget/frida-gadget.so subprojects/frida-core/lib/gadget/SherlockElf-gadget.so
           cd ..
         done
     
@@ -179,137 +182,137 @@ jobs:
     - name: Package build result for Android
       shell: bash
       run: |
-        gzip build-android-arm/subprojects/frida-core/server/frida-server
-        gzip build-android-arm64/subprojects/frida-core/server/frida-server
-        gzip build-android-x86/subprojects/frida-core/server/frida-server
-        gzip build-android-x86_64/subprojects/frida-core/server/frida-server
+        gzip build-android-arm/subprojects/frida-core/server/SherlockElf-server
+        gzip build-android-arm64/subprojects/frida-core/server/SherlockElf-server
+        gzip build-android-x86/subprojects/frida-core/server/SherlockElf-server
+        gzip build-android-x86_64/subprojects/frida-core/server/SherlockElf-server
         
-        gzip build-android-arm/subprojects/frida-core/inject/frida-inject
-        gzip build-android-arm64/subprojects/frida-core/inject/frida-inject
-        gzip build-android-x86/subprojects/frida-core/inject/frida-inject
-        gzip build-android-x86_64/subprojects/frida-core/inject/frida-inject
+        gzip build-android-arm/subprojects/frida-core/inject/SherlockElf-inject
+        gzip build-android-arm64/subprojects/frida-core/inject/SherlockElf-inject
+        gzip build-android-x86/subprojects/frida-core/inject/SherlockElf-inject
+        gzip build-android-x86_64/subprojects/frida-core/inject/SherlockElf-inject
         
-        gzip build-android-arm/subprojects/frida-core/lib/gadget/frida-gadget.so
-        gzip build-android-arm64/subprojects/frida-core/lib/gadget/frida-gadget.so
-        gzip build-android-x86/subprojects/frida-core/lib/gadget/frida-gadget.so
-        gzip build-android-x86_64/subprojects/frida-core/lib/gadget/frida-gadget.so
+        gzip build-android-arm/subprojects/frida-core/lib/gadget/SherlockElf-gadget.so
+        gzip build-android-arm64/subprojects/frida-core/lib/gadget/SherlockElf-gadget.so
+        gzip build-android-x86/subprojects/frida-core/lib/gadget/SherlockElf-gadget.so
+        gzip build-android-x86_64/subprojects/frida-core/lib/gadget/SherlockElf-gadget.so
 
-    - name: Upload android arm frida-server for SherlockElf
+    - name: Upload android arm SherlockElf-server
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-arm/subprojects/frida-core/server/frida-server.gz
+        asset_path: ${{ github.workspace }}/build-android-arm/subprojects/frida-core/server/SherlockElf-server.gz
         asset_name: SherlockElf-server-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-arm.gz
         asset_content_type: application/octet-stream
 
-    - name: Upload android arm64 frida-server for SherlockElf
+    - name: Upload android arm64 SherlockElf-server
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-arm64/subprojects/frida-core/server/frida-server.gz
+        asset_path: ${{ github.workspace }}/build-android-arm64/subprojects/frida-core/server/SherlockElf-server.gz
         asset_name: SherlockElf-server-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-arm64.gz
         asset_content_type: application/octet-stream
 
-    - name: Upload android x86 frida-server for SherlockElf
+    - name: Upload android x86 SherlockElf-server
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-x86/subprojects/frida-core/server/frida-server.gz
+        asset_path: ${{ github.workspace }}/build-android-x86/subprojects/frida-core/server/SherlockElf-server.gz
         asset_name: SherlockElf-server-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-x86.gz
         asset_content_type: application/octet-stream
 
-    - name: Upload android x86_64 frida-server for SherlockElf
+    - name: Upload android x86_64 SherlockElf-server
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-x86_64/subprojects/frida-core/server/frida-server.gz
+        asset_path: ${{ github.workspace }}/build-android-x86_64/subprojects/frida-core/server/SherlockElf-server.gz
         asset_name: SherlockElf-server-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-x86_64.gz
         asset_content_type: application/octet-stream
         
-    - name: Upload android arm frida-inject for SherlockElf
+    - name: Upload android arm SherlockElf-inject
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-arm/subprojects/frida-core/inject/frida-inject.gz
+        asset_path: ${{ github.workspace }}/build-android-arm/subprojects/frida-core/inject/SherlockElf-inject.gz
         asset_name: SherlockElf-inject-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-arm.gz
         asset_content_type: application/octet-stream
         
-    - name: Upload android arm64 frida-inject for SherlockElf
+    - name: Upload android arm64 SherlockElf-inject
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-arm64/subprojects/frida-core/inject/frida-inject.gz
+        asset_path: ${{ github.workspace }}/build-android-arm64/subprojects/frida-core/inject/SherlockElf-inject.gz
         asset_name: SherlockElf-inject-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-arm64.gz
         asset_content_type: application/octet-stream
         
-    - name: Upload android x86 frida-inject for SherlockElf
+    - name: Upload android x86 SherlockElf-inject
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-x86/subprojects/frida-core/inject/frida-inject.gz
+        asset_path: ${{ github.workspace }}/build-android-x86/subprojects/frida-core/inject/SherlockElf-inject.gz
         asset_name: SherlockElf-inject-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-x86.gz
         asset_content_type: application/octet-stream
         
-    - name: Upload android x86_64 frida-inject for SherlockElf
+    - name: Upload android x86_64 SherlockElf-inject
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-x86_64/subprojects/frida-core/inject/frida-inject.gz
+        asset_path: ${{ github.workspace }}/build-android-x86_64/subprojects/frida-core/inject/SherlockElf-inject.gz
         asset_name: SherlockElf-inject-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-x86_64.gz
         asset_content_type: application/octet-stream
     
-    - name: Upload android arm frida-gadget for SherlockElf
+    - name: Upload android arm SherlockElf-gadget
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-arm/subprojects/frida-core/lib/gadget/frida-gadget.so.gz
+        asset_path: ${{ github.workspace }}/build-android-arm/subprojects/frida-core/lib/gadget/SherlockElf-gadget.so.gz
         asset_name: SherlockElf-gadget-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-arm.so.gz
         asset_content_type: application/octet-stream
 
-    - name: Upload android arm64 frida-gadget for SherlockElf
+    - name: Upload android arm64 SherlockElf-gadget
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-arm64/subprojects/frida-core/lib/gadget/frida-gadget.so.gz
+        asset_path: ${{ github.workspace }}/build-android-arm64/subprojects/frida-core/lib/gadget/SherlockElf-gadget.so.gz
         asset_name: SherlockElf-gadget-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-arm64.so.gz
         asset_content_type: application/octet-stream
    
-    - name: Upload android x86 frida-gadget for SherlockElf
+    - name: Upload android x86 SherlockElf-gadget
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-x86/subprojects/frida-core/lib/gadget/frida-gadget.so.gz
+        asset_path: ${{ github.workspace }}/build-android-x86/subprojects/frida-core/lib/gadget/SherlockElf-gadget.so.gz
         asset_name: SherlockElf-gadget-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-x86.so.gz
         asset_content_type: application/octet-stream
 
-    - name: Upload android x86_64 frida-gadget for SherlockElf
+    - name: Upload android x86_64 SherlockElf-gadget
       uses: actions/upload-release-asset@v1.0.2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.checkReleaseVersion.outputs.upload_url }}
-        asset_path: ${{ github.workspace }}/build-android-x86_64/subprojects/frida-core/lib/gadget/frida-gadget.so.gz
+        asset_path: ${{ github.workspace }}/build-android-x86_64/subprojects/frida-core/lib/gadget/SherlockElf-gadget.so.gz
         asset_name: SherlockElf-gadget-${{ needs.check_version.outputs.FRIDA_VERSION }}-android-x86_64.so.gz
         asset_content_type: application/octet-stream
