@@ -1,3 +1,4 @@
+from datetime       import datetime
 from capstone       import Cs, CS_ARCH_X86, CS_MODE_64
 from utils.utils    import Print
 
@@ -8,6 +9,9 @@ def disassemble_code(code, address, dump=True):
     md.detail = True
 
     # Disassemble the binary data
+    if dump:
+        with open(f"dump/mem_dump.txt", "a") as f:
+            f.write(f'{datetime.now().strftime("%Y%m%d_%H%M%S")}\n') # Write timestamp for better investigation
     for instr in md.disasm(code, address):
         Print(f"0x{instr.address:x}:\t{instr.mnemonic}\t{instr.op_str}")
         if dump:
