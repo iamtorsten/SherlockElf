@@ -11,7 +11,7 @@ def disassemble_code(code, address, dump=True):
     # Disassemble the binary data
     if dump:
         with open(f"dump/mem_dump.txt", "a") as f:
-            f.write(f'{datetime.now().strftime("%Y%m%d_%H%M%S")}\n') # Write timestamp for better investigation
+            f.write(f'{datetime.now().strftime("%Y%m%d_%H%M%S")}\n')  # Write timestamp for better investigation
     for instr in md.disasm(code, address):
         Print(f"0x{instr.address:x}:\t{instr.mnemonic}\t{instr.op_str}")
         if dump:
@@ -20,4 +20,3 @@ def disassemble_code(code, address, dump=True):
     if dump:
         with open(f"dump/mem_dump.txt", "a") as f:
             f.write(f"-> ----------------------------------------------- <-\n")
-

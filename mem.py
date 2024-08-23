@@ -8,6 +8,7 @@ from datetime       import datetime
 from emu.injector   import Inject
 
 target = "" # Enter the name of the app to be monitored here.
+source = "mem.js"
 
 def on_message(message, data):
     if message['type'] == 'send':
@@ -33,7 +34,7 @@ def on_message(message, data):
 def main():
     try:
         # Load the Frida script
-        with open("hook/mem.js") as f:
+        with open(f"hook/{source}") as f:
             script_code = f.read()
 
         # Setup Device, Session and Source
