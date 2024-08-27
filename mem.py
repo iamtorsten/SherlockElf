@@ -33,7 +33,7 @@ def on_message(message, data):
 
 def main():
     try:
-        # Load the Frida script
+        # Load the script
         with open(f"hook/{source}") as f:
             script_code = f.read()
 

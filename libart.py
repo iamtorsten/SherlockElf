@@ -11,7 +11,7 @@ script_file = "hook/libart.js"  # Hook
 
 def main():
     try:
-        # Load the Frida script
+        # Load the script
         with open(script_file) as f:
             script_code = f.read()
 

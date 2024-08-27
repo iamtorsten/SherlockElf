@@ -20,7 +20,7 @@ def on_destroyed():
 
 def main():
     try:
-        # Load the Frida script
+        # Load the script
         with open("hook/strlen.js") as f:
             script_code = f.read()
 
