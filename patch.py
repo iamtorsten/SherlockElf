@@ -10,14 +10,11 @@ from emu.injector import Inject
 def generate_js_code(target_library, patches):
     js_code = f"""
     const targetLibrary = Module.getBaseAddress("{target_library}");
-
     """
 
     for patch in patches:
         address = patch["address"]
         instructions = patch.get("instructions", [])
-
-        # Hier werden die Adressen relativ zur Basisadresse der Library gesetzt
         full_address = f"targetLibrary.add({address})"
 
         js_code += f"""
@@ -25,18 +22,56 @@ def generate_js_code(target_library, patches):
             onEnter: function (args) {{
                 console.log("[INFO] Hooking Instruction at Address: {full_address}");
 
-                // Instruktionen patchen
         """
 
         for instruction in instructions:
-            if "replace" in instruction:
-                original = instruction["original"]
-                replacement = instruction["replace"]
+            original = instruction.get("original")
+            replacement = instruction.get("replace")
+
+            # Patchen von Registeroperationen (z.B. mov, add, sub)
+            if "mov" in original:
+                reg = original.split()[1].strip(",")  # z.B. x0 bei "mov x0, x1"
                 js_code += f"""
-                if (this.context.{original}) {{
-                    console.log("[INFO] {original} gepatched.");
-                    this.context.{original} = ptr("{replacement}");
-                }}
+                var original_value = this.context.{reg};
+                console.log("[INFO] Originalwert von {reg}: " + original_value);
+
+                // Patchen des Registers {reg}
+                this.context.{reg} = ptr("{replacement}");
+                console.log("[INFO] Geänderter Wert von {reg}: " + this.context.{reg});
+                """
+
+            elif "add" in original:
+                reg = original.split()[1].strip(",")
+                js_code += f"""
+                var original_value = this.context.{reg}.toInt32();
+                console.log("[INFO] Originalwert von {reg}: " + original_value);
+
+                // Addieren eines Werts zu {reg}
+                this.context.{reg} = ptr(original_value + {replacement});
+                console.log("[INFO] Geänderter Wert von {reg}: " + this.context.{reg});
+                """
+
+            elif "sub" in original:
+                reg = original.split()[1].strip(",")
+                js_code += f"""
+                var original_value = this.context.{reg}.toInt32();
+                console.log("[INFO] Originalwert von {reg}: " + original_value);
+
+                // Subtrahieren eines Werts von {reg}
+                this.context.{reg} = ptr(original_value - {replacement});
+                console.log("[INFO] Geänderter Wert von {reg}: " + this.context.{reg});
+                """
+
+            # Patchen von Speicheroperationen (z.B. ldr, str)
+            elif "ldr" in original or "str" in original:
+                reg = original.split()[1].strip(",")  # Register, in das geladen wird oder aus dem gespeichert wird
+                js_code += f"""
+                var mem_address = this.context.{reg};
+                console.log("[INFO] Speicheradresse, die gepatcht wird: " + mem_address);
+
+                // Patchen des Werts an der Speicheradresse
+                Memory.writePointer(mem_address, ptr("{replacement}"));
+                console.log("[INFO] Neuer Wert an Speicheradresse: " + Memory.readPointer(mem_address));
                 """
 
         js_code += """
@@ -90,22 +125,24 @@ if __name__ == "__main__":
         {
             "address": "0x1ea8",  # Adresse relativ zur Basis der Library
             "instructions": [
-                {"original": "x16", "replace": "0x12345678"}  # Original Register wird durch neuen Wert ersetzt
-            ]
+                {"original": "mov x0, x1", "replace": "0x12345678"},  # Setzt x0 auf 0x12345678
+                {"original": "ldr x0, [x1]", "replace": "0x87654321"},  # Lädt 0x87654321 in x0
+            ],
+            "return": "0x9999"  # Optional: Rückgabewert ändern
         },
         {
             "address": "0xf000",  # Adresse relativ zur Basis der Library
             "instructions": [
-                {"original": "sp", "replace": "sp.sub(0x20)"}  # Subtrahiere 0x20 statt 0x10 vom Stack Pointer
+                {"original": "add x0, #0x10", "replace": "0x20"},  # Addiert 0x20 zu x0 anstelle von 0x10
+                {"original": "str x0, [x1]", "replace": "0x55555555"}  # Speichert 0x55555555 in der Adresse in x1
             ]
         },
         {
             "address": "0xf004",  # Adresse relativ zur Basis der Library
             "instructions": [
-                {"original": "q30", "replace": "0x11111111"},
-                {"original": "q31", "replace": "0x22222222"}
-            ],
-            "return": "0x9999"  # Optional: Rückgabewert ändern
+                {"original": "sub sp, #0x10", "replace": "0x20"},  # Subtrahiert 0x20 von sp statt 0x10
+                {"original": "ldr x2, [x3]", "replace": "0x33333333"},  # Lädt 0x33333333 in x2
+            ]
         }
     ]
 
