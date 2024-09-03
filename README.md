@@ -5,8 +5,17 @@
 
 **SherlockElf** is a powerful tool designed for both static and dynamic analysis of Android ELF binaries and dynamic analysis of iOS Macho-O binaries (experimental). It helps security researchers, developers, and reverse engineers gain insights into ELF (Executable and Linkable Format) binaries used in Android applications and Mach-O (Mach Object) binaries used in iOS applications.
 <br>
+
+**Emulator:**
+
 <p align="center">
   <img src="assets/Emu.gif" alt="Emu"/>
+</p>
+
+**Dynamic Binary Instrumentor:**
+
+<p align="center">
+  <img src="assets/Instrumentor.png" alt="Emu"/>
 </p>
 
 ## Features ✨
@@ -44,7 +53,7 @@ Using SherlockElf is straightforward. Below are some common commands and their d
 
 - **Static Analysis**:
     ```bash
-    python emulate.py
+    python emulator.py
     ```
     This command performs a static analysis on the specified ELF binary and outputs the results.
 <br><br>
