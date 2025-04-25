@@ -1,0 +1,13 @@
+diff --git a/tests/core/mapper.c b/tests/core/mapper.c
+index 13d4f967..5849ef0d 100644
+--- a/tests/core/mapper.c
++++ b/tests/core/mapper.c
+@@ -110,7 +110,7 @@ main (gint argc,
+   destructor =
+       GSIZE_TO_POINTER (gum_darwin_mapper_destructor (mapper));
+   entrypoint =
+-      GSIZE_TO_POINTER (gum_darwin_mapper_resolve (mapper, "frida_agent_main"));
++      GSIZE_TO_POINTER (gum_darwin_mapper_resolve (mapper, "main"));
+ 
+   g_timer_start (timer);
+   constructor ();

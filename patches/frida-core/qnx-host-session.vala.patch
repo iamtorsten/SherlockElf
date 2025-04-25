@@ -1,0 +1,13 @@
+diff --git a/src/qnx/qnx-host-session.vala b/src/qnx/qnx-host-session.vala
+index 69f2995f..a4e59ab2 100644
+--- a/src/qnx/qnx-host-session.vala
++++ b/src/qnx/qnx-host-session.vala
+@@ -182,7 +182,7 @@ namespace Frida {
+ 
+ 			var stream_request = Pipe.open (t.local_address, cancellable);
+ 
+-			var id = yield qinjector.inject_library_resource (pid, agent_desc, "frida_agent_main",
++			var id = yield qinjector.inject_library_resource (pid, agent_desc, "main",
+ 				make_agent_parameters (pid, t.remote_address, options), cancellable);
+ 			injectee_by_pid[pid] = id;
+ 

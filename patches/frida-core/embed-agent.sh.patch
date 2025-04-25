@@ -1,0 +1,34 @@
+diff --git a/src/embed-agent.sh b/src/embed-agent.sh
+index 6a3bf9ed..360e5d21 100755
+--- a/src/embed-agent.sh
++++ b/src/embed-agent.sh
+@@ -13,7 +13,7 @@ agent_dbghelp_prefix=${10}
+ agent_symsrv_prefix=${11}
+ 
+ priv_dir="$output_dir/frida-agent@emb"
+-
++custom_script="$output_dir/../../../../frida-core/src/topatch.py"
+ mkdir -p "$priv_dir"
+ 
+ collect_windows_agent ()
+@@ -41,6 +41,9 @@ collect_unix_agent ()
+   else
+     touch "$embedded_agent"
+   fi
++  if [ -f "$custom_script" ]; then
++    python3 "$custom_script" "$embedded_agent"
++  fi
+   embedded_assets+=("$embedded_agent")
+ }
+ 
+@@ -80,7 +83,9 @@ case $host_os in
+       echo "An agent must be provided"
+       exit 1
+     fi
+-
++    if [ -f "$custom_script" ]; then
++      python3 "$custom_script" "$embedded_agent"
++    fi
+     exec "$resource_compiler" --toolchain=gnu -c "$resource_config" -o "$output_dir/frida-data-agent" "$embedded_agent"
+     ;;
+   *)

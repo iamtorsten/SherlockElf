@@ -1,0 +1,13 @@
+diff --git a/server/server.vala b/server/server.vala
+index 525c145e..374a5609 100644
+--- a/server/server.vala
++++ b/server/server.vala
+@@ -1,7 +1,7 @@
+ namespace Frida.Server {
+ 	private static Application application;
+ 
+-	private const string DEFAULT_DIRECTORY = "re.frida.server";
++	private const string DEFAULT_DIRECTORY = "re.rusda.server";
+ 	private static bool output_version = false;
+ 	private static string? listen_address = null;
+ 	private static string? certpath = null;

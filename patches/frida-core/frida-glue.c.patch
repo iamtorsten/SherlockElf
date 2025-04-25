@@ -1,0 +1,19 @@
+diff --git a/src/frida-glue.c b/src/frida-glue.c
+index ee8f0737..dced8119 100644
+--- a/src/frida-glue.c
++++ b/src/frida-glue.c
+@@ -39,12 +39,12 @@ frida_init_with_runtime (FridaRuntime rt)
+ #ifdef HAVE_GIOOPENSSL
+     g_io_module_openssl_register ();
+ #endif
+-
++    g_set_prgname ("russell");
+     if (runtime == FRIDA_RUNTIME_OTHER)
+     {
+       main_context = g_main_context_ref (g_main_context_default ());
+       main_loop = g_main_loop_new (main_context, FALSE);
+-      main_thread = g_thread_new ("frida-main-loop", run_main_loop, NULL);
++      main_thread = g_thread_new ("rusda-main-loop", run_main_loop, NULL);
+     }
+ 
+     g_once_init_leave (&frida_initialized, TRUE);

@@ -1,20 +1,12 @@
-From 2df62177584129575842eff6a5ec1703c58f840d Sun Aug 18 11:53:00 2001
-From: iamtorsten <torsten.klinger@googlemail.com>
-Date: Sun, 18 Aug 2024 11:53:00 +0800
-Subject: [PATCH 1/9] SherlockElf: string_frida_rpc
-
----
- lib/base/rpc.vala | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
 diff --git a/lib/base/rpc.vala b/lib/base/rpc.vala
-index 3695ba8c..664bd19c 100644
+index 3695ba8c..1c4bf202 100644
 --- a/lib/base/rpc.vala
 +++ b/lib/base/rpc.vala
-@@ -11,13 +11,22 @@ namespace Frida {
+@@ -10,14 +10,21 @@ namespace Frida {
+ 		public RpcClient (RpcPeer peer) {
  			Object (peer: peer);
  		}
- 
+-
 +		public string getRpcStr(bool quote){
 +			string result = (string) GLib.Base64.decode((string) GLib.Base64.decode("Wm5KcFpHRTZjbkJq"));
 +			if(quote){
@@ -23,7 +15,6 @@ index 3695ba8c..664bd19c 100644
 +				return result;
 +			}
 +		}
-+
  		public async Json.Node call (string method, Json.Node[] args, Cancellable? cancellable) throws Error, IOError {
  			string request_id = Uuid.string_random ();
  
@@ -35,7 +26,7 @@ index 3695ba8c..664bd19c 100644
  				.add_string_value (request_id)
  				.add_string_value ("call")
  				.add_string_value (method)
-@@ -70,7 +79,7 @@ namespace Frida {
+@@ -70,7 +77,7 @@ namespace Frida {
  		}
  
  		public bool try_handle_message (string json) {
@@ -44,7 +35,7 @@ index 3695ba8c..664bd19c 100644
  				return false;
  
  			var parser = new Json.Parser ();
-@@ -99,7 +108,7 @@ namespace Frida {
+@@ -99,7 +106,7 @@ namespace Frida {
  				return false;
  
  			string? type = rpc_message.get_element (0).get_string ();
@@ -53,6 +44,3 @@ index 3695ba8c..664bd19c 100644
  				return false;
  
  			var request_id_value = rpc_message.get_element (1);
--- 
-2.42.0
-

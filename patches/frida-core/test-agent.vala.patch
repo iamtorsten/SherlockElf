@@ -1,0 +1,13 @@
+diff --git a/tests/test-agent.vala b/tests/test-agent.vala
+index 62fb8260..6e5eba51 100644
+--- a/tests/test-agent.vala
++++ b/tests/test-agent.vala
+@@ -449,7 +449,7 @@ Interceptor.attach(Module.getExportByName('libsystem_kernel.dylib', 'open'), ()
+ 			assert_nonnull (module);
+ 
+ 			void * main_func_symbol;
+-			var main_func_found = module.symbol ("frida_agent_main", out main_func_symbol);
++			var main_func_found = module.symbol ("main", out main_func_symbol);
+ 			assert_true (main_func_found);
+ 			main_impl = (AgentMainFunc) main_func_symbol;
+ 

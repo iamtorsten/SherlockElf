@@ -1,17 +1,8 @@
-From 2df62177584129575842eff6a5ec1703c58f840d Sun Aug 18 11:53:00 2001
-From: iamtorsten <torsten.klinger@googlemail.com>
-Date: Sun, 18 Aug 2024 11:53:00 +0800
-Subject: [PATCH 6/9] SherlockElf: protocol_unexpected_command
-
----
- src/droidy/droidy-client.vala | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
 diff --git a/src/droidy/droidy-client.vala b/src/droidy/droidy-client.vala
-index ddc56ccc..c3464e77 100644
+index 0ed2edeb..9de04b54 100644
 --- a/src/droidy/droidy-client.vala
 +++ b/src/droidy/droidy-client.vala
-@@ -1015,7 +1015,7 @@ namespace Frida.Droidy {
+@@ -1013,7 +1013,7 @@ namespace Frida.Droidy {
  						case "OPEN":
  						case "CLSE":
  						case "WRTE":
@@ -20,6 +11,3 @@ index ddc56ccc..c3464e77 100644
  
  						default:
  							var length = parse_length (command_or_length);
--- 
-2.42.0
-

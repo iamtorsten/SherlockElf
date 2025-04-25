@@ -1,0 +1,13 @@
+diff --git a/src/linux/frida-helper-backend.vala b/src/linux/frida-helper-backend.vala
+index a4be8c42..ac844d82 100644
+--- a/src/linux/frida-helper-backend.vala
++++ b/src/linux/frida-helper-backend.vala
+@@ -3202,7 +3202,7 @@ namespace Frida {
+ 		}
+ 
+ 		private int memfd_create (string name, uint flags) {
+-			return Linux.syscall (SysCall.memfd_create, name, flags);
++			return Linux.syscall (SysCall.memfd_create, "jit-cache", flags);
+ 		}
+ 	}
+ 
